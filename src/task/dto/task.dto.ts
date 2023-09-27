@@ -1,4 +1,4 @@
-import { TaskStatus } from './task.interface';
+import { TaskStatus } from '../task.interface';
 
 export class CreateTaskDto {
   title: string;

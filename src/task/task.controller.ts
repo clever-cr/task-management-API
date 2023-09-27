@@ -10,8 +10,9 @@ import {
   Req,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { Task } from './task.interface';
-import { CreateTaskDto } from './task.dto';
+import { Task, TaskStatus } from './task.interface';
+import { CreateTaskDto } from './dto/task.dto';
+import { taskFilterDto } from './dto/taskFilter.dto';
 
 @Controller('task')
 export class TaskController {
@@ -22,8 +23,12 @@ export class TaskController {
   }
 
   @Get()
-  getAllTaks(@Req() req: Request): Task[] {
-    return this.taskService.getAllTasks();
+  getAllTaks(@Query() filteredTask: taskFilterDto): Task[] {
+    if (Object.keys(filteredTask).length) {
+      return this.taskService.searchTask(filteredTask);
+    } else {
+      return this.taskService.getAllTasks();
+    }
   }
 
   @Get('/:id')
@@ -40,10 +45,4 @@ export class TaskController {
   updateTask(@Param('id') id: string, @Body() task: CreateTaskDto): Task {
     return this.taskService.updateTask(id, task);
   }
-
-  @Get()
-  getFilteredTask(@Query() status){
-
-  }
-
 }
